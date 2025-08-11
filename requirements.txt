@@ -1,0 +1,5 @@
+Flask
+scikit-learn==1.7.1
+pandas
+numpy
+gunicorn # This is a production-ready web server

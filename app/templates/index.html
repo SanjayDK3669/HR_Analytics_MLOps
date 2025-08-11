@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MLOps Project Prediction</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for better aesthetics */
+        body {
+            background-image: linear-gradient(to right top, #d1d5db, #d8dbe0, #e0e2e5, #e7e8eb, #eeeff0);
+        }
+        .container {
+            border-radius: 1rem; /* More rounded corners */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Stronger shadow */
+            padding: 2.5rem; /* More padding */
+        }
+        .form-group label {
+            color: #4a5568; /* Darker gray for labels */
+        }
+        .form-group select,
+        .form-group input[type="number"] {
+            border: 1px solid #cbd5e0; /* Lighter border */
+            padding: 0.75rem 1rem; /* More padding */
+            transition: all 0.2s ease-in-out;
+        }
+        .form-group select:focus,
+        .form-group input[type="number"]:focus {
+            border-color: #3b82f6; /* Blue border on focus */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); /* Blue ring on focus */
+        }
+        button[type="submit"] {
+            background-color: #2563eb; /* Stronger blue */
+            padding: 0.75rem 1.5rem; /* More padding */
+            font-size: 1.125rem; /* Larger text */
+            transition: all 0.3s ease-in-out;
+            border-radius: 0.75rem; /* Rounded corners */
+        }
+        button[type="submit"]:hover {
+            background-color: #1d4ed8; /* Darker blue on hover */
+            transform: translateY(-2px); /* Slight lift effect */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        #prediction-result {
+            background-color: #f0f4f8; /* Light blue-gray background */
+            border: 1px solid #d1e0ed; /* Lighter border */
+            border-radius: 0.75rem;
+        }
+        #message-box {
+            background-color: #e0f2fe; /* Lighter blue for info box */
+            border-color: #90cdf4;
+            color: #2b6cb0;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-inter antialiased flex items-center justify-center min-h-screen p-4">
+    <div class="container bg-white p-8 rounded-lg shadow-xl w-full max-w-lg">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Predict Employee Status</h1>
+
+        <div id="message-box" class="hidden bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <strong class="font-bold">Info:</strong>
+            <span class="block sm:inline" id="message-content"></span>
+            <span class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer" onclick="document.getElementById('message-box').classList.add('hidden')">
+                <svg class="fill-current h-6 w-6 text-blue-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.15a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697L11.819 10l3.029 2.651a1.2 1.2 0 0 1 0 1.698z"/></svg>
+            </span>
+        </div>
+
+        <form id="prediction-form" class="space-y-4">
+            <!-- Form fields will be dynamically generated here by script.js -->
+            <div id="form-fields"></div>
+
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:scale-105">
+                Get Prediction
+            </button>
+        </form>
+
+        <div id="prediction-result" class="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg hidden">
+            <h2 class="text-xl font-semibold text-gray-800 mb-2">Prediction Result:</h2>
+            <p id="result-text" class="text-lg text-gray-700"></p>
+            <p id="probabilities-text" class="text-sm text-gray-600 mt-1"></p>
+        </div>
+
+        <div class="mt-6 text-center text-gray-500 text-sm">
+            <p>&copy; 2024 MLOps Project. All rights reserved.</p>
+        </div>
+    </div>
+
+    <!-- Embed encoded data for JavaScript to use -->
+    <script>
+        const encodedData = {
+            "city": {
+                "city_103": 0, "city_40": 1, "city_21": 2, "city_115": 3, "city_162": 4, "city_176": 5, "city_160": 6, "city_46": 7, "city_61": 8, "city_114": 9, "city_13": 10, "city_159": 11, "city_102": 12, "city_67": 13, "city_100": 14, "city_16": 15, "city_71": 16, "city_104": 17, "city_64": 18, "city_101": 19, "city_83": 20, "city_105": 21, "city_73": 22, "city_75": 23, "city_41": 24, "city_11": 25, "city_93": 26, "city_90": 27, "city_36": 28, "city_20": 29, "city_57": 30, "city_152": 31, "city_19": 32, "city_65": 33, "city_74": 34, "city_173": 35, "city_136": 36, "city_98": 37, "city_97": 38, "city_50": 39, "city_138": 40, "city_82": 41, "city_157": 42, "city_89": 43, "city_150": 44, "city_70": 45, "city_175": 46, "city_94": 47, "city_28": 48, "city_59": 49, "city_165": 50, "city_145": 51, "city_142": 52, "city_26": 53, "city_12": 54, "city_37": 55, "city_43": 56, "city_116": 57, "city_23": 58, "city_99": 59, "city_149": 60, "city_10": 61, "city_45": 62, "city_80": 63, "city_128": 64, "city_158": 65, "city_123": 66, "city_7": 67, "city_72": 68, "city_106": 69, "city_143": 70, "city_78": 71, "city_109": 72, "city_24": 73, "city_134": 74, "city_48": 75, "city_144": 76, "city_91": 77, "city_146": 78, "city_133": 79, "city_126": 80, "city_118": 81, "city_9": 82, "city_167": 83, "city_27": 84, "city_84": 85, "city_54": 86, "city_39": 87, "city_79": 88, "city_76": 89, "city_77": 90, "city_81": 91, "city_131": 92, "city_44": 93, "city_117": 94, "city_155": 95, "city_33": 96, "city_141": 97, "city_127": 98, "city_62": 99, "city_53": 100, "city_25": 101, "city_2": 102, "city_69": 103, "city_120": 104, "city_111": 105, "city_30": 106, "city_1": 107, "city_140": 108, "city_179": 109, "city_55": 110, "city_14": 111, "city_42": 112, "city_107": 113, "city_18": 114, "city_139": 115, "city_180": 116, "city_166": 117, "city_121": 118, "city_129": 119, "city_8": 120, "city_31": 121, "city_171": 122
+            },
+            "gender": {
+                "Male": 0, "Female": 1, "Other": 2
+            },
+            "relevent_experience": {
+                "Has relevent experience": 0, "No relevent experience": 1
+            },
+            "enrolled_university": {
+                "no_enrollment": 0, "Full time course": 1, "Part time course": 2
+            },
+            "education_level": {
+                "Graduate": 0, "Masters": 1, "High School": 2, "Phd": 3, "Primary School": 4
+            },
+            "major_discipline": {
+                "STEM": 0, "Business Degree": 1, "Arts": 2, "Humanities": 3, "No Major": 4, "Other": 5
+            },
+            "experience": {
+                ">20": 0, "15": 1, "5": 2, "<1": 3, "11": 4, "13": 5, "7": 6, "17": 7, "2": 8, "16": 9, "1": 10, "4": 11, "10": 12, "14": 13, "18": 14, "19": 15, "12": 16, "3": 17, "6": 18, "9": 19, "8": 20, "20": 21
+            },
+            "company_size": {
+                "50-99": 0, "<10": 1, "10000+": 2, "5000-9999": 3, "1000-4999": 4, "10/49": 5, "100-500": 6, "500-999": 7
+            },
+            "company_type": {
+                "Pvt Ltd": 0, "Funded Startup": 1, "Early Stage Startup": 2, "Other": 3, "Public Sector": 4, "NGO": 5
+            },
+            "last_new_job": {
+                "1": 0, ">4": 1, "never": 2, "4": 3, "3": 4, "2": 5
+            }
+        };
+    </script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</body>
+</html>

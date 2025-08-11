@@ -1,0 +1,14 @@
+[
+    {
+        "model_name": "GradientBoostingClassifier",
+        "accuracy": 0.784446764091858,
+        "path": "D:\\MLops_with_gemini\\mlops_project\\models\\current_best_model.pkl",
+        "timestamp": "2025-08-07T01:27:47.396961"
+    },
+    {
+        "model_name": "GradientBoostingClassifier",
+        "accuracy": 0.7863148738764859,
+        "path": "D:\\MLops_with_gemini\\mlops_project\\models\\current_best_model.pkl",
+        "timestamp": "2025-08-07T02:14:22.953737"
+    }
+]
