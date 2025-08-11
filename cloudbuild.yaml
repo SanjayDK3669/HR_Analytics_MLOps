@@ -2,11 +2,11 @@ steps:
 # 1. Build the Docker image using the Dockerfile in your repository.
 # The image is tagged with the commit SHA for versioning.
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/${_PROJECT_ID}/mlops-app:${_COMMIT_SHA}', '.']
+  args: ['build', '-t', 'gcr.io/${_PROJECT_ID}/mlops-app:latest', '.']
 
 # 2. Push the newly built image to Google Container Registry.
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/${_PROJECT_ID}/mlops-app:${_COMMIT_SHA}']
+  args: ['push', 'gcr.io/${_PROJECT_ID}/mlops-app:latest']
 
 # 3. Deploy the container to Cloud Run.
 # This step uses the gcloud CLI to create or update the Cloud Run service.
@@ -14,11 +14,11 @@ steps:
   entrypoint: gcloud
   args: [
     'run', 'deploy', 'mlops-app',
-    '--image', 'gcr.io/${_PROJECT_ID}/mlops-app:${_COMMIT_SHA}',
+    '--image', 'gcr.io/${_PROJECT_ID}/mlops-app:latest',
     '--region', 'us-central1', # IMPORTANT: Replace with your preferred GCP region.
     '--platform', 'managed'
   ]
 
 images:
 # This specifies which images will be stored in the Container Registry after the build.
-- 'gcr.io/${_PROJECT_ID}/mlops-app:${_COMMIT_SHA}'
+- 'gcr.io/${_PROJECT_ID}/mlops-app:latest'
