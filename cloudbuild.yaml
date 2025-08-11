@@ -1,12 +1,17 @@
+options:
+  # This option tells Cloud Build to use a user-owned bucket for logs,
+  # resolving the service account permission issue.
+  default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
+
 steps:
 # 1. Build the Docker image using the Dockerfile in your repository.
 # The image is tagged with the commit SHA for versioning.
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/${_PROJECT_ID}/mlops-app:latest', '.']
+  args: ['build', '-t', 'gcr.io/${_PROJECT_ID}/mlops-app:${_COMMIT_SHA}', '.']
 
 # 2. Push the newly built image to Google Container Registry.
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/${_PROJECT_ID}/mlops-app:latest']
+  args: ['push', 'gcr.io/${_PROJECT_ID}/mlops-app:${_COMMIT_SHA}']
 
 # 3. Deploy the container to Cloud Run.
 # This step uses the gcloud CLI to create or update the Cloud Run service.
@@ -14,11 +19,11 @@ steps:
   entrypoint: gcloud
   args: [
     'run', 'deploy', 'mlops-app',
-    '--image', 'gcr.io/${_PROJECT_ID}/mlops-app:latest',
+    '--image', 'gcr.io/${_PROJECT_ID}/mlops-app:${_COMMIT_SHA}',
     '--region', 'us-central1', # IMPORTANT: Replace with your preferred GCP region.
     '--platform', 'managed'
   ]
 
 images:
 # This specifies which images will be stored in the Container Registry after the build.
-- 'gcr.io/${_PROJECT_ID}/mlops-app:latest'
+- 'gcr.io/${_PROJECT_ID}/mlops-app:${_COMMIT_SHA}'
