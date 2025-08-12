@@ -2,7 +2,7 @@ options:
   default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
 
 steps:
-# 1. Build the Docker image
+# 1. Build the Docker image (Cloud Build will run in 'global')
 - name: 'gcr.io/cloud-builders/docker'
   args:
     [
@@ -19,7 +19,7 @@ steps:
       'gcr.io/$PROJECT_ID/mlops-app:$SHORT_SHA'
     ]
 
-# 3. Deploy to Cloud Run
+# 3. Deploy to Cloud Run in asia-south1
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
   args:
